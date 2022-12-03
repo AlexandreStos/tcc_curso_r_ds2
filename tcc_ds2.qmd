@@ -1,0 +1,135 @@
+---
+title: " Explorando a história do cinema: IMDb - *Internet Movie Database*"
+format:
+  html:
+    theme: superhero
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = F, warning = F, fig.align = "center", dpi=100)
+
+```
+
+```{css}
+body {
+text-align: justify;
+}
+```
+
+```{css}
+body {
+font-family: "Gill Sans", sans-serif;; 
+}
+```
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+library(knitr)
+library(patchwork)
+library(plotly)
+library(lubridate)
+library(ggimage)
+library(knitr)
+library(ggdark)
+```
+
+```{r}
+# baixando a base 
+remotes::install_github("curso-r/basesCursoR")
+imdb <- basesCursoR::pegar_base("imdb_completa")
+imdb_pessoas <- basesCursoR::pegar_base("imdb_pessoas")
+imdb_avaliacoes <- basesCursoR::pegar_base("imdb_avaliacoes")
+```
+
+
+![](https://img.freepik.com/fotos-gratis/as-emocoes-das-pessoas-no-cinema_155003-11385.jpg?size=626&ext=jpg&uid=R86014730&ga=GA1.2.886821348.1669335571)
+
+
+## Algumas curiosidades a respeito da história do cinema:
+
+##  Qual mês do ano aconteceram mais estréias?
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+glimpse(imdb)
+```
+
+
+```{r, echo=FALSE}
+# transformando variável data_lançamento em "date"
+imdb$data_lancamento <- as.Date(imdb$data_lancamento)
+# criando colunas mês e dia 
+imd_datas <- imdb |> 
+  mutate(dia = mday(data_lancamento), 
+         mes = month(data_lancamento))
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+p1 <- imd_datas |> 
+  select(mes)|> 
+  group_by(mes) |> 
+  ggplot()+
+  aes(y= mes, fill= "blue" )+
+  geom_bar()+
+  guides(color = guide_legend(reverse = TRUE)) +
+    scale_y_continuous(
+    breaks = seq(1,12,1),)+
+  scale_x_continuous(
+    breaks = seq(0,50000,1000),)+
+  labs(x= "Nº de filmes",
+       y= "Mês",
+  caption = "Fonte: IMDb (1888-2020)",
+  title ="Número de filmes lançados por mês", hjust = 0.5)+
+  theme_classic()
+  
+p1 + dark_theme_gray(base_family = "Fira Sans Condensed Light", base_size = 14) + 
+  theme(plot.title = element_text(family = "Fira Sans Condensed"),
+        plot.background = element_rect(fill = "gray10"),
+        panel.background = element_blank(),
+        panel.grid.major = element_line(color = "grey30", size = 0.2),
+        panel.grid.minor = element_line(color = "grey30", size = 0.2),
+        legend.background = element_blank(),
+        axis.ticks = element_blank(),
+        legend.key = element_blank(),
+        legend.position = c(0.815, 0.27))+
+  theme(legend.position="none")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+![](https://img.freepik.com/vetores-gratis/casal-apaixonado-no-cinema_107791-5120.jpg?size=626&ext=jpg)
+
+
+```{r}
+# 
+```
