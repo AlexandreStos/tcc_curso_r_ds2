@@ -22,17 +22,22 @@ font-family: "Gill Sans", sans-serif;;
 }
 ```
 
+
 ```{r}
 library(tidyverse)
 library(ggthemes)
 library(knitr)
 library(patchwork)
-library(plotly)
+#library(plotly)
 library(lubridate)
 library(ggimage)
 library(knitr)
 library(ggdark)
+library(knitr)
 ```
+
+
+
 
 ```{r}
 # baixando a base 
@@ -46,7 +51,7 @@ imdb_avaliacoes <- basesCursoR::pegar_base("imdb_avaliacoes")
 ![](https://img.freepik.com/fotos-gratis/as-emocoes-das-pessoas-no-cinema_155003-11385.jpg?size=626&ext=jpg&uid=R86014730&ga=GA1.2.886821348.1669335571)
 
 
-## Algumas curiosidades a respeito da história do cinema:
+## Algumas curiosidades a respeito da história do filmes:
 
 ##  Qual mês do ano aconteceram mais estréias?
 
@@ -63,6 +68,9 @@ imdb$data_lancamento <- as.Date(imdb$data_lancamento)
 imd_datas <- imdb |> 
   mutate(dia = mday(data_lancamento), 
          mes = month(data_lancamento))
+imd_datas <- imd_datas |> 
+  mutate(dia_mes = paste0(dia, "/", mes))
+
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
@@ -73,14 +81,14 @@ p1 <- imd_datas |>
   aes(y= mes, fill= "blue" )+
   geom_bar()+
   guides(color = guide_legend(reverse = TRUE)) +
-    scale_y_continuous(
-    breaks = seq(1,12,1),)+
+    scale_y_discrete(
+   limits = c("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"), )+
   scale_x_continuous(
     breaks = seq(0,50000,1000),)+
   labs(x= "Nº de filmes",
        y= "Mês",
   caption = "Fonte: IMDb (1888-2020)",
-  title ="Número de filmes lançados por mês", hjust = 0.5)+
+  title ="Filmes lançados por mês - IMDb", hjust = 0.5)+
   theme_classic()
   
 p1 + dark_theme_gray(base_family = "Fira Sans Condensed Light", base_size = 14) + 
@@ -97,14 +105,28 @@ p1 + dark_theme_gray(base_family = "Fira Sans Condensed Light", base_size = 14) 
 ```
 
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+datas_limpas <- imd_datas |> 
+  select(dia_mes) |>
+  group_by(dia_mes) |> 
+  count()
+datas_limpas <- datas_limpas[-367,] # removendo os NA/NA "string"
+
+ datas_limpas <- datas_limpas |> 
+ arrange(desc(n)) |> 
+ select(`Dia do ano` = dia_mes, `Nº de lançamentos` = n) 
+
+```
 
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 
+head(datas_limpas,3) |> 
+kable()
 
-
-
-
-
+```
+ 
 
 
 
